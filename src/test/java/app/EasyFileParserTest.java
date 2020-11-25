@@ -16,19 +16,26 @@ public class EasyFileParserTest {
 
     @Test(expected = FileSystemNotFoundException.class)
     public void getFilesFromNonExistingDirectory() {
-        List<String> getFiles = new EasyFileParser("NotFound").getFiles();
+        List<String> getFiles = new EasyFileParser("NotFound").getFilePaths();
     }
 
     @Test
     public void getFilesFromEmptyDirectory() {
-        List<String> getFiles = new EasyFileParser(EMPTY_DIR).getFiles();
+        List<String> getFiles = new EasyFileParser(EMPTY_DIR).getFilePaths();
         Assert.assertEquals(getFiles.size(),0);
     }
 
     @Test
     public void getFilesFromDirectory() {
-        List<String> getFiles = new EasyFileParser(DIRECTORY_WITH_FILES).getFiles();
+        List<String> getFiles = new EasyFileParser(DIRECTORY_WITH_FILES).getFilePaths();
         Assert.assertEquals(getFiles.size(),3);
+    }
+
+    @Test
+    public void getFilesFromDirectoryWithLimit(){
+        int limit = 2;
+        List<String> getFiles = new EasyFileParser(DIRECTORY_WITH_FILES).getFilePaths(limit);
+        Assert.assertEquals(getFiles.size(),limit);
     }
 
 }
