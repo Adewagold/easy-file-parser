@@ -1,2 +1,2 @@
-# easy-file-parser
-A java library to make fetching any kind of files easy
+# Easy Files Parser Java
+A java library to make fetching any kind of files seamless
