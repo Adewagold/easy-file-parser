@@ -28,7 +28,7 @@ public class EasyFileParserTest {
     @Test
     public void getFilesFromDirectory() {
         List<String> getFiles = new EasyFileParser(DIRECTORY_WITH_FILES).getFilePaths();
-        Assert.assertEquals(getFiles.size(),3);
+        Assert.assertNotNull("Method returned files", getFiles);
     }
 
     @Test
@@ -36,6 +36,31 @@ public class EasyFileParserTest {
         int limit = 2;
         List<String> getFiles = new EasyFileParser(DIRECTORY_WITH_FILES).getFilePaths(limit);
         Assert.assertEquals(getFiles.size(),limit);
+    }
+
+    @Test
+    public void getFilesFromDirectoryWithZeroLimit(){
+        int limit = 0;
+        List<String> getFiles = new EasyFileParser(DIRECTORY_WITH_FILES).getFilePaths(limit);
+        Assert.assertEquals(limit, getFiles.size());
+    }
+
+    @Test
+    public void getFilesWithParticularExtension(){
+        String testExtension = ".txt";
+        List<String> filesWithExtension = new EasyFileParser(DIRECTORY_WITH_FILES).getFilePaths(testExtension);
+        filesWithExtension.forEach(path -> {
+            Assert.assertEquals(path.substring(path.length()-testExtension.length()), testExtension);
+        });
+    }
+
+    @Test
+    public void getFilesWithJsonExtension(){
+        String testExtension = ".json";
+        List<String> filesWithExtension = new EasyFileParser(DIRECTORY_WITH_FILES).getFilePaths(testExtension);
+        filesWithExtension.forEach(path -> {
+            Assert.assertEquals(path.substring(path.length()-testExtension.length()), testExtension);
+        });
     }
 
 }
