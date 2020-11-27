@@ -63,4 +63,9 @@ public class EasyFileParserTest {
         });
     }
 
+    @Test
+    public void readJsonFile(){
+//        JsonNode jsonObject = new JsonNode();
+    }
+
 }
