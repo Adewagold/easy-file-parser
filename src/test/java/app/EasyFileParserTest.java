@@ -64,6 +64,27 @@ public class EasyFileParserTest {
     }
 
     @Test
+    public void readTestFiles(){
+        String testExtension = ".txt";
+        EasyFileParser fileParser = new EasyFileParser(DIRECTORY_WITH_FILES);
+        List<String> filesWithExtension = fileParser.getFilePaths(testExtension);
+        List<String> fileLines = fileParser.readLines(filesWithExtension.get(0));
+        Assert.assertEquals(fileLines.get(0), "This is a sample test file");
+    }
+
+    @Test
+    public void readMultipleTestFileLines(){
+        String testExtension = ".txt";
+        EasyFileParser fileParser = new EasyFileParser(DIRECTORY_WITH_FILES);
+        List<String> filesWithExtension = fileParser.getFilePaths(testExtension);
+        filesWithExtension.forEach(sPath->{
+            List<String> lines = fileParser.readLines(sPath);
+            Assert.assertEquals(lines.get(0), "This is a sample test file");
+        });
+
+
+    }
+    @Test
     public void readJsonFile(){
 //        JsonNode jsonObject = new JsonNode();
     }

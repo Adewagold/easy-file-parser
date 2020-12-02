@@ -1,8 +1,6 @@
 package com.walenotes.app;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -69,5 +67,20 @@ public class EasyFileParser {
                 .filter(path -> path.endsWith(extension))
                 .collect(Collectors.toList());
         return files;
+    }
+
+    public List<String> readLines(String s) {
+         List<String> lines = new ArrayList<>();
+        try(FileReader fileReader = new FileReader(s)){
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line;
+            while((line = bufferedReader.readLine()) != null){
+                lines.add(line);
+            }
+        }catch (IOException ex){
+            ex.printStackTrace();
+            System.exit(0);
+        }
+        return lines;
     }
 }
