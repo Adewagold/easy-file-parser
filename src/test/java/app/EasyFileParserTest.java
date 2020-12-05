@@ -1,5 +1,6 @@
 package app;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.walenotes.app.EasyFileParser;
 import org.junit.Assert;
 import org.junit.Test;
@@ -57,7 +58,8 @@ public class EasyFileParserTest {
     @Test
     public void getFilesWithJsonExtension(){
         String testExtension = ".json";
-        List<String> filesWithExtension = new EasyFileParser(DIRECTORY_WITH_FILES).getFilePaths(testExtension);
+        EasyFileParser fileParser = new EasyFileParser(DIRECTORY_WITH_FILES);
+        List<String> filesWithExtension = fileParser.getFilePaths(testExtension);
         filesWithExtension.forEach(path -> {
             Assert.assertEquals(path.substring(path.length()-testExtension.length()), testExtension);
         });
@@ -84,9 +86,13 @@ public class EasyFileParserTest {
 
 
     }
+
     @Test
     public void readJsonFile(){
-//        JsonNode jsonObject = new JsonNode();
+        String testExtension = ".json";
+        EasyFileParser fileParser = new EasyFileParser(DIRECTORY_WITH_FILES);
+        List<String> filesWithExtension = fileParser.getFilePaths(testExtension);
+        List<String> readJson = fileParser.readLines(filesWithExtension.get(0));
     }
 
 }
