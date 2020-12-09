@@ -1,8 +1,11 @@
 package com.walenotes.app;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.*;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,16 +31,15 @@ public class EasyFileParser {
         try {
             return Files.walk(directory).
                     filter(Files::isRegularFile);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            throw new Error(ex);
         }
-        return null;
     }
 
     private List<String> fetchPathList(){
         List<String> files;
         files = getFiles(directory)
-                .map(path->path.toString())
+                .map(Path::toString)
                 .collect(Collectors.toList());
         return files;
     }
@@ -69,5 +71,29 @@ public class EasyFileParser {
                 .filter(path -> path.endsWith(extension))
                 .collect(Collectors.toList());
         return files;
+    }
+
+    public List<String> readLines(String s) {
+         List<String> lines = new ArrayList<>();
+        try(FileReader fileReader = new FileReader(s)){
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line;
+            while((line = bufferedReader.readLine()) != null){
+                lines.add(line);
+            }
+        }catch (IOException ex){
+            ex.printStackTrace();
+            throw new Error(ex);
+        }
+        return lines;
+    }
+
+    public JsonNode readJsonObject(String jsonString) throws JsonProcessingException {
+        try{
+            return new ObjectMapper().readTree(jsonString);
+        }
+        catch (IOException ex){
+            throw ex;
+        }
     }
 }

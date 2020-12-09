@@ -1,5 +1,8 @@
 package app;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.walenotes.app.EasyFileParser;
 import org.junit.Assert;
 import org.junit.Test;
@@ -57,15 +60,53 @@ public class EasyFileParserTest {
     @Test
     public void getFilesWithJsonExtension(){
         String testExtension = ".json";
-        List<String> filesWithExtension = new EasyFileParser(DIRECTORY_WITH_FILES).getFilePaths(testExtension);
+        EasyFileParser fileParser = new EasyFileParser(DIRECTORY_WITH_FILES);
+        List<String> filesWithExtension = fileParser.getFilePaths(testExtension);
         filesWithExtension.forEach(path -> {
             Assert.assertEquals(path.substring(path.length()-testExtension.length()), testExtension);
         });
     }
 
     @Test
-    public void readJsonFile(){
-//        JsonNode jsonObject = new JsonNode();
+    public void readTestFiles(){
+        String testExtension = ".txt";
+        EasyFileParser fileParser = new EasyFileParser(DIRECTORY_WITH_FILES);
+        List<String> filesWithExtension = fileParser.getFilePaths(testExtension);
+        List<String> fileLines = fileParser.readLines(filesWithExtension.get(0));
+        Assert.assertEquals(fileLines.get(0), "This is a sample test file");
+    }
+
+    @Test
+    public void readMultipleTestFileLines(){
+        String testExtension = ".txt";
+        EasyFileParser fileParser = new EasyFileParser(DIRECTORY_WITH_FILES);
+        List<String> filesWithExtension = fileParser.getFilePaths(testExtension);
+        filesWithExtension.forEach(sPath->{
+            List<String> lines = fileParser.readLines(sPath);
+            Assert.assertEquals(lines.get(0), "This is a sample test file");
+        });
+
+
+    }
+
+    @Test(expected = JsonParseException.class)
+    public void readInvalidJsonFile() throws JsonProcessingException {
+        String testExtension = ".json";
+        EasyFileParser fileParser = new EasyFileParser(DIRECTORY_WITH_FILES);
+        String jsonFile = "src/test/resources/testdir/testfiles/invalid.json";
+        String jsonString = fileParser.readLines(jsonFile).get(0);
+        fileParser.readJsonObject(jsonString);
+
+    }
+
+    @Test()
+    public void readValidJsonFile() throws JsonProcessingException {
+        String testExtension = ".json";
+        EasyFileParser fileParser = new EasyFileParser(DIRECTORY_WITH_FILES);
+        String jsonFile = "src/test/resources/testdir/testfiles/json_file_one.json";
+        String jsonString = fileParser.readLines(jsonFile).get(0);
+        JsonNode jsonObject = fileParser.readJsonObject(jsonString);
+        assertNotNull(jsonObject);
     }
 
 }
