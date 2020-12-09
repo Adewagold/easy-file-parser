@@ -90,13 +90,23 @@ public class EasyFileParserTest {
     }
 
     @Test(expected = JsonParseException.class)
-    public void readJsonFile() throws JsonProcessingException {
+    public void readInvalidJsonFile() throws JsonProcessingException {
         String testExtension = ".json";
         EasyFileParser fileParser = new EasyFileParser(DIRECTORY_WITH_FILES);
         String jsonFile = "src/test/resources/testdir/testfiles/invalid.json";
         String jsonString = fileParser.readLines(jsonFile).get(0);
-        JsonNode jsonObject = fileParser.readJsonObject(jsonString);
+        fileParser.readJsonObject(jsonString);
 
+    }
+
+    @Test()
+    public void readValidJsonFile() throws JsonProcessingException {
+        String testExtension = ".json";
+        EasyFileParser fileParser = new EasyFileParser(DIRECTORY_WITH_FILES);
+        String jsonFile = "src/test/resources/testdir/testfiles/json_file_one.json";
+        String jsonString = fileParser.readLines(jsonFile).get(0);
+        JsonNode jsonObject = fileParser.readJsonObject(jsonString);
+        assertNotNull(jsonObject);
     }
 
 }
