@@ -26,16 +26,15 @@ public class EasyFileParser {
         try {
             return Files.walk(directory).
                     filter(Files::isRegularFile);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            throw new Error(ex);
         }
-        return null;
     }
 
     private List<String> fetchPathList(){
         List<String> files;
         files = getFiles(directory)
-                .map(path->path.toString())
+                .map(Path::toString)
                 .collect(Collectors.toList());
         return files;
     }
@@ -79,7 +78,7 @@ public class EasyFileParser {
             }
         }catch (IOException ex){
             ex.printStackTrace();
-            System.exit(0);
+            throw new Error(ex);
         }
         return lines;
     }
