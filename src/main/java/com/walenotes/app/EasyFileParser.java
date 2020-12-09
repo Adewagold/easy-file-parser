@@ -1,5 +1,10 @@
 package com.walenotes.app;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.*;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
@@ -81,5 +86,14 @@ public class EasyFileParser {
             throw new Error(ex);
         }
         return lines;
+    }
+
+    public JsonNode readJsonObject(String jsonString) throws JsonProcessingException {
+        try{
+            return new ObjectMapper().readTree(jsonString);
+        }
+        catch (IOException ex){
+            throw ex;
+        }
     }
 }

@@ -1,5 +1,7 @@
 package app;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.walenotes.app.EasyFileParser;
 import org.junit.Assert;
@@ -87,12 +89,14 @@ public class EasyFileParserTest {
 
     }
 
-    @Test
-    public void readJsonFile(){
+    @Test(expected = JsonParseException.class)
+    public void readJsonFile() throws JsonProcessingException {
         String testExtension = ".json";
         EasyFileParser fileParser = new EasyFileParser(DIRECTORY_WITH_FILES);
-        List<String> filesWithExtension = fileParser.getFilePaths(testExtension);
-        List<String> readJson = fileParser.readLines(filesWithExtension.get(0));
+        String jsonFile = "src/test/resources/testdir/testfiles/invalid.json";
+        String jsonString = fileParser.readLines(jsonFile).get(0);
+        JsonNode jsonObject = fileParser.readJsonObject(jsonString);
+
     }
 
 }
