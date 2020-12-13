@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class EasyFileParser {
+
     private final String directory;
 
     public EasyFileParser(String directory) {
