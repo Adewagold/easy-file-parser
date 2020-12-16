@@ -51,11 +51,6 @@ public class EasyFileParser {
         return files;
     }
 
-    public static void main(String[] args){
-        List<String> easyFileParser = new EasyFileParser("/Users/adewagold/javatemp").getFilePaths();
-        easyFileParser.forEach(System.out::println);
-    }
-
     public List<String> getFilePaths(int limit) {
         List<String> files;
         files = fetchPathList()
