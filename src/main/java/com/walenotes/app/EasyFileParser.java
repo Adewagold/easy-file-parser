@@ -14,16 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
+/**
+ * This class consists exclusively of static methods that operate on files,
+ * directories, or other types of files.
+ *
+ * <p> In most cases, the methods defined here will delegate to the associated
+ * file system provider to perform the file operations.
+ *
+ * @since 1.7
+ */
 public class EasyFileParser {
 
-    private final String directory;
-
-    public EasyFileParser(String directory) {
-        this.directory = directory;
+    private EasyFileParser() {
     }
 
-    private Stream<Path> getFiles(String dirPath){
+    private static Stream<Path> getFiles(String dirPath){
 
         Path directory = Paths.get(dirPath);
         if(!Files.exists(directory)){
@@ -37,7 +42,7 @@ public class EasyFileParser {
         }
     }
 
-    private List<String> fetchPathList(){
+    private static List<String> fetchPathList(String directory){
         List<String> files;
         files = getFiles(directory)
                 .map(Path::toString)
@@ -45,36 +50,31 @@ public class EasyFileParser {
         return files;
     }
 
-    public List<String> getFilePaths(){
+    public static List<String> getFilePaths(String directory){
         List<String> files;
-        files = new ArrayList<>(fetchPathList());
+        files = new ArrayList<>(fetchPathList(directory));
         return files;
     }
 
-    public static void main(String[] args){
-        List<String> easyFileParser = new EasyFileParser("/Users/adewagold/javatemp").getFilePaths();
-        easyFileParser.forEach(System.out::println);
-    }
-
-    public List<String> getFilePaths(int limit) {
+    public static List<String> getFilePaths(String directory, int limit) {
         List<String> files;
-        files = fetchPathList()
+        files = fetchPathList(directory)
                 .stream()
                 .limit(limit)
                 .collect(Collectors.toList());
         return files;
     }
 
-    public List<String> getFilePaths(String extension) {
+    public static List<String> getFilePaths(String directory, String extension) {
         List<String> files;
-        files = fetchPathList()
+        files = fetchPathList(directory)
                 .stream()
                 .filter(path -> path.endsWith(extension))
                 .collect(Collectors.toList());
         return files;
     }
 
-    public List<String> readLines(String s) {
+    public static List<String> readLines(String s) {
          List<String> lines = new ArrayList<>();
         try(FileReader fileReader = new FileReader(s)){
             BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -89,7 +89,7 @@ public class EasyFileParser {
         return lines;
     }
 
-    public JsonNode readJsonObject(String jsonString) throws JsonProcessingException {
+    public static JsonNode readJsonObject(String jsonString) throws JsonProcessingException {
         try{
             return new ObjectMapper().readTree(jsonString);
         }

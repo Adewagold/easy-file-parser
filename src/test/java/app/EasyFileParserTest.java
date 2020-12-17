@@ -19,39 +19,39 @@ public class EasyFileParserTest {
 
     @Test(expected = FileSystemNotFoundException.class)
     public void getFilesFromNonExistingDirectory() {
-        List<String> getFiles = new EasyFileParser("NotFound").getFilePaths();
+        List<String> getFiles = EasyFileParser.getFilePaths("NotFound");
     }
 
     @Test
     public void getFilesFromEmptyDirectory() {
-        List<String> getFiles = new EasyFileParser(EMPTY_DIR).getFilePaths();
+        List<String> getFiles = EasyFileParser.getFilePaths(EMPTY_DIR);
         Assert.assertEquals(getFiles.size(),0);
     }
 
     @Test
     public void getFilesFromDirectory() {
-        List<String> getFiles = new EasyFileParser(DIRECTORY_WITH_FILES).getFilePaths();
+        List<String> getFiles = EasyFileParser.getFilePaths(DIRECTORY_WITH_FILES);
         Assert.assertNotNull("Method returned files", getFiles);
     }
 
     @Test
     public void getFilesFromDirectoryWithLimit(){
         int limit = 2;
-        List<String> getFiles = new EasyFileParser(DIRECTORY_WITH_FILES).getFilePaths(limit);
+        List<String> getFiles = EasyFileParser.getFilePaths(DIRECTORY_WITH_FILES,limit);
         Assert.assertEquals(getFiles.size(),limit);
     }
 
     @Test
     public void getFilesFromDirectoryWithZeroLimit(){
         int limit = 0;
-        List<String> getFiles = new EasyFileParser(DIRECTORY_WITH_FILES).getFilePaths(limit);
+        List<String> getFiles = EasyFileParser.getFilePaths(DIRECTORY_WITH_FILES, limit);
         Assert.assertEquals(limit, getFiles.size());
     }
 
     @Test
     public void getFilesWithParticularExtension(){
         String testExtension = ".txt";
-        List<String> filesWithExtension = new EasyFileParser(DIRECTORY_WITH_FILES).getFilePaths(testExtension);
+        List<String> filesWithExtension = EasyFileParser.getFilePaths(DIRECTORY_WITH_FILES,testExtension);
         filesWithExtension.forEach(path -> {
             Assert.assertEquals(path.substring(path.length()-testExtension.length()), testExtension);
         });
@@ -60,8 +60,7 @@ public class EasyFileParserTest {
     @Test
     public void getFilesWithJsonExtension(){
         String testExtension = ".json";
-        EasyFileParser fileParser = new EasyFileParser(DIRECTORY_WITH_FILES);
-        List<String> filesWithExtension = fileParser.getFilePaths(testExtension);
+        List<String> filesWithExtension = EasyFileParser.getFilePaths(DIRECTORY_WITH_FILES, testExtension);
         filesWithExtension.forEach(path -> {
             Assert.assertEquals(path.substring(path.length()-testExtension.length()), testExtension);
         });
@@ -70,19 +69,17 @@ public class EasyFileParserTest {
     @Test
     public void readTestFiles(){
         String testExtension = ".txt";
-        EasyFileParser fileParser = new EasyFileParser(DIRECTORY_WITH_FILES);
-        List<String> filesWithExtension = fileParser.getFilePaths(testExtension);
-        List<String> fileLines = fileParser.readLines(filesWithExtension.get(0));
+        List<String> filesWithExtension = EasyFileParser.getFilePaths(DIRECTORY_WITH_FILES, testExtension);
+        List<String> fileLines = EasyFileParser.readLines(filesWithExtension.get(0));
         Assert.assertEquals(fileLines.get(0), "This is a sample test file");
     }
 
     @Test
     public void readMultipleTestFileLines(){
         String testExtension = ".txt";
-        EasyFileParser fileParser = new EasyFileParser(DIRECTORY_WITH_FILES);
-        List<String> filesWithExtension = fileParser.getFilePaths(testExtension);
+        List<String> filesWithExtension = EasyFileParser.getFilePaths(DIRECTORY_WITH_FILES, testExtension);
         filesWithExtension.forEach(sPath->{
-            List<String> lines = fileParser.readLines(sPath);
+            List<String> lines = EasyFileParser.readLines(sPath);
             Assert.assertEquals(lines.get(0), "This is a sample test file");
         });
 
@@ -92,20 +89,18 @@ public class EasyFileParserTest {
     @Test(expected = JsonParseException.class)
     public void readInvalidJsonFile() throws JsonProcessingException {
         String testExtension = ".json";
-        EasyFileParser fileParser = new EasyFileParser(DIRECTORY_WITH_FILES);
         String jsonFile = "src/test/resources/testdir/testfiles/invalid.json";
-        String jsonString = fileParser.readLines(jsonFile).get(0);
-        fileParser.readJsonObject(jsonString);
+        String jsonString = EasyFileParser.readLines(jsonFile).get(0);
+        EasyFileParser.readJsonObject(jsonString);
 
     }
 
     @Test()
     public void readValidJsonFile() throws JsonProcessingException {
         String testExtension = ".json";
-        EasyFileParser fileParser = new EasyFileParser(DIRECTORY_WITH_FILES);
         String jsonFile = "src/test/resources/testdir/testfiles/json_file_one.json";
-        String jsonString = fileParser.readLines(jsonFile).get(0);
-        JsonNode jsonObject = fileParser.readJsonObject(jsonString);
+        String jsonString = EasyFileParser.readLines(jsonFile).get(0);
+        JsonNode jsonObject = EasyFileParser.readJsonObject(jsonString);
         assertNotNull(jsonObject);
     }
 
